@@ -1,0 +1,42 @@
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 12px;
+  padding: 9px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-faint);
+}
+
+.value {
+  color: var(--chip-ink);
+  font-weight: 500;
+}
+
+.tier {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 1100px) {
+  .note {
+    display: none;
+  }
+}

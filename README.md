@@ -21,9 +21,9 @@ driven entirely by your existing [Claude Code](https://claude.com/claude-code) s
 
 <br>
 
-<img src="docs/assets/control-room.svg" width="100%" alt="The Torch Control Room mid-run: a five-card pipeline rail with two critics streaming in parallel, an output pane, and a usage footer">
+<img src="docs/assets/screenshot-control-room.png" width="100%" alt="The Torch Control Room mid-run: a five-card pipeline rail with the critic torch lit, and two critics streaming adversarial findings in parallel panes">
 
-*The Control Room — two critics tearing into the plan in parallel while the rest of the pipeline waits its turn.*
+*The Control Room (demo mode) — two critics tearing into the plan in parallel while the rest of the pipeline waits its turn.*
 
 </div>
 
@@ -58,12 +58,16 @@ matched to that stage's cognitive demands — and never claims success it didn't
 |:-:|-------|------------------------|---------|
 | 1 | **Intake** — asks you 3–5 sharp clarifying questions, writes the brief and the verify commands | `sonnet` · low | new (becomes the main session) |
 | 2 | **Planner** — full spec: stack, modules, contracts, milestones; spawns research subagents when the goal touches fast-moving dependencies | `fable` · max | resumes main |
-| 3 | **Critics** — adversarial review in brand-new sessions (`opus` + `fable` in parallel on the 20x tier; single critic otherwise), then a merge pass | `opus`/`fable` · high | fresh ×2, merge resumes main |
+| 3 | **Critics** — adversarial review in brand-new sessions (`opus` + `fable` in parallel on the Claude Max 20x plan; a single critic on Pro/Max 5x), then a merge pass | `opus`/`fable` · high | fresh ×2, merge resumes main |
 | 4 | **Implementer** — writes real files into your working directory; Heavy Mode swaps in `opus` | `sonnet` · medium | fresh, in the workdir |
 | 5 | **Verify ⇄ Refine** — the orchestrator runs your build/tests (zero tokens), feeds structured failures back into the implementer's resumed session; the same failure surviving consecutive iterations escalates the refiner to `fable` | `sonnet` → `fable` | resumes implementer |
 
 > **No telephone game.** No stage ever sees only the previous stage's output: every prompt
 > carries the original goal verbatim plus the accumulated artifact.
+
+| Intake asks before anyone codes | The loop verifies before anyone celebrates |
+|:---:|:---:|
+| ![Intake stage asking 3–5 sharp clarifying questions](docs/assets/screenshot-intake.png) | ![Verify ⇄ Refine loop going green after an escalated fix](docs/assets/screenshot-loop.png) |
 
 ### Presets
 
@@ -76,6 +80,7 @@ matched to that stage's cognitive demands — and never claims success it didn't
 ---
 
 ## 🕯️ The torch is the status system
+
 
 No spinners, no progress bars: each stage card carries a torch.
 
@@ -142,7 +147,7 @@ your subscription rate limits — the usage footer keeps that visible at all tim
 Each run writes everything to plain files in your working directory, so the output
 survives independent of the app:
 
-```
+```text
 your-workdir/
 └── torch/run-<timestamp>/
     ├── artifact.md      # brief, plan, critiques, final spec
