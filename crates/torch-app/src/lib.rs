@@ -79,6 +79,20 @@ fn start_run(
         .and_then(|v| v.as_str().map(String::from))
         .unwrap_or_else(|| "standard".into());
 
+    // Resolve every provider CLI to an absolute path so spawning works even
+    // when the GUI's PATH omits Homebrew / ~/.local/bin. User-supplied
+    // overrides (if any) win.
+    for provider in torch_core::claude::Provider::ALL {
+        config
+            .binaries
+            .entry(provider.id().to_string())
+            .or_insert_with(|| {
+                provider
+                    .resolve_binary()
+                    .unwrap_or_else(|| std::path::PathBuf::from(provider.binary()))
+            });
+    }
+
     {
         let conn = state.db.lock().unwrap();
         config.templates = templates_with_overrides(&conn);
@@ -166,7 +180,6 @@ fn start_run(
                     PipelineError::Cancelled | PipelineError::CheckpointRejected => "cancelled",
                     _ => "failed",
                 };
-                let _ = db::set_run_status(&conn, &orch_run_id, status);
                 let _ = orch_app.emit(
                     "run-failed",
                     json!({ "runId": orch_run_id, "error": error.to_string() }),
@@ -292,13 +305,17 @@ async fn probe_models(state: State<'_, AppState>, force: Option<bool>) -> CmdRes
         }
     }
 
+    let claude_bin = torch_core::claude::Provider::Claude
+        .resolve_binary()
+        .unwrap_or_else(|| std::path::PathBuf::from("claude"));
     const CANDIDATES: [&str; 4] = ["sonnet", "opus", "fable", "haiku"];
     let handles: Vec<_> = CANDIDATES
         .iter()
         .map(|alias| {
             let alias = alias.to_string();
+            let claude_bin = claude_bin.clone();
             std::thread::spawn(move || {
-                let output = std::process::Command::new("claude")
+                let output = std::process::Command::new(&claude_bin)
                     .args([
                         "-p",
                         "Reply with exactly: OK",
@@ -336,6 +353,39 @@ async fn probe_models(state: State<'_, AppState>, force: Option<bool>) -> CmdRes
     Ok(models)
 }
 
+/// Which provider CLIs are installed, plus model suggestions for each.
+/// Claude's models come from the cached live probe; other providers use
+/// the registry's suggestions (their CLIs accept any model id).
+#[tauri::command]
+async fn probe_providers(state: State<'_, AppState>) -> CmdResult<Vec<serde_json::Value>> {
+    use torch_core::claude::Provider;
+
+    let claude_models: Vec<String> = {
+        let conn = state.db.lock().unwrap();
+        db::get_setting(&conn, "available_models")
+            .ok()
+            .flatten()
+            .and_then(|cached| serde_json::from_str(&cached).ok())
+            .unwrap_or_default()
+    };
+
+    let providers = Provider::ALL
+        .iter()
+        .map(|p| {
+            let resolved = p.resolve_binary();
+            eprintln!("[probe] {} -> {:?}", p.id(), resolved);
+            let available = resolved.is_some();
+            let models: Vec<String> = if *p == Provider::Claude && !claude_models.is_empty() {
+                claude_models.clone()
+            } else {
+                p.suggested_models().iter().map(|m| m.to_string()).collect()
+            };
+            json!({ "id": p.id(), "available": available, "models": models })
+        })
+        .collect();
+    Ok(providers)
+}
+
 #[tauri::command]
 async fn pick_directory(app: AppHandle) -> CmdResult<Option<String>> {
     Ok(app
@@ -345,10 +395,46 @@ async fn pick_directory(app: AppHandle) -> CmdResult<Option<String>> {
         .map(|p| p.to_string()))
 }
 
+/// JS-side errors forwarded here so launch failures are debuggable headlessly.
+#[tauri::command]
+fn js_log(message: String) {
+    eprintln!("[webview] {message}");
+}
+
+const ERROR_FORWARDER: &str = r#"
+window.addEventListener('error', (e) => {
+  try { window.__TAURI_INTERNALS__.invoke('js_log', { message: 'error: ' + e.message + ' @ ' + e.filename + ':' + e.lineno }); } catch (_) {}
+});
+window.addEventListener('unhandledrejection', (e) => {
+  try { window.__TAURI_INTERNALS__.invoke('js_log', { message: 'unhandledrejection: ' + (e.reason && (e.reason.stack || e.reason.message) || String(e.reason)) }); } catch (_) {}
+});
+"#;
+
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .setup(|app| {
+        .append_invoke_initialization_script(ERROR_FORWARDER)
+        .on_page_load(|_, payload| {
+            eprintln!("[page-load] {:?} {}", payload.event(), payload.url());
+        })
+        .setup(move |app| {
+            eprintln!("[setup] torch-app starting");
+            // Standard asset-protocol window (IPC intact). Built in code —
+            // not tauri.conf.json — so we can set the macOS overlay titlebar.
+            let window = tauri::WebviewWindowBuilder::new(
+                app,
+                "main",
+                tauri::WebviewUrl::default(),
+            )
+            .title("TORCH")
+            .inner_size(1280.0, 840.0)
+            .min_inner_size(980.0, 640.0)
+            .background_color(tauri::webview::Color(18, 19, 21, 255));
+            #[cfg(target_os = "macos")]
+            let window = window
+                .title_bar_style(tauri::TitleBarStyle::Overlay)
+                .hidden_title(true);
+            window.build()?;
             let data_dir = app.path().app_data_dir()?;
             std::fs::create_dir_all(&data_dir)?;
             let conn = db::open(&data_dir.join("torch.db"))?;
@@ -370,7 +456,9 @@ pub fn run() {
             get_templates,
             save_template,
             probe_models,
+            probe_providers,
             pick_directory,
+            js_log,
         ])
         .run(tauri::generate_context!())
         .expect("error while running torch");

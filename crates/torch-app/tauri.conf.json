@@ -6,21 +6,12 @@
   "build": {
     "devUrl": "http://localhost:5173",
     "frontendDist": "../../ui/dist",
-    "beforeDevCommand": "cd ../../ui && npm run dev",
-    "beforeBuildCommand": "cd ../../ui && npm run build"
+    "beforeDevCommand": "echo 'Vite dev server can be started separately with: cd ui && npm run dev (for browser demo mode)'",
+    "beforeBuildCommand": "npm run build --prefix /Users/carterbarker/Downloads/Torch/torch-app/ui"
   },
   "app": {
-    "windows": [
-      {
-        "title": "TORCH",
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true,
-        "width": 1280,
-        "height": 840,
-        "minWidth": 980,
-        "minHeight": 640
-      }
-    ],
+    "windows": [],
+    "withGlobalTauri": true,
     "security": {
       "csp": null
     }
@@ -28,6 +19,9 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/icon.png", "icons/icon.icns"]
+    "icon": [
+      "icons/icon.png",
+      "icons/icon.icns"
+    ]
   }
 }
