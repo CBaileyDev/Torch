@@ -1,0 +1,71 @@
+.banner {
+  margin-top: 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.content {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-bright);
+  flex: none;
+}
+
+.message {
+  font-size: 13px;
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+
+.stage {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-bright);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+/* Neutral colors — NOT amber */
+.rejectBtn,
+.approveBtn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  border-radius: 5px;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  border: 1px solid var(--border);
+  background: var(--chip-bg);
+  color: var(--ink-bright);
+}
+
+.rejectBtn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.approveBtn:hover {
+  border-color: var(--ink-dim);
+  background: var(--panel-live);
+}

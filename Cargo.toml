@@ -6,7 +6,7 @@ members = ["crates/torch-core", "crates/torch-cli", "crates/torch-app"]
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/torch-app/torch"
+repository = "https://github.com/CBaileyDev/Torch"
 authors = ["Torch contributors"]
 
 [workspace.dependencies]
