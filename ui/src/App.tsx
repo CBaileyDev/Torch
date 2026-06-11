@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAppStore } from './store';
 import { initBridge, getBridge } from './bridge';
+import type { ProviderId } from './bridge/types';
 import { Titlebar } from './components/Titlebar';
 import { RunsSidebar } from './components/RunsSidebar';
 import { ControlRoom } from './components/ControlRoom';
@@ -38,13 +39,63 @@ export default function App() {
         store.setSettings({ ...rest, planTier: savedSettings['plan_tier'] as 'pro' | 'max5x' | 'max20x' });
       }
 
-      // Probe models
-      const models = await bridge.probeModels();
-      store.setAvailableModels(models);
+      // Restore escalation settings if persisted
+      const escalationPatch: Partial<typeof store.settings> = {};
+      if (savedSettings['escalation_provider']) {
+        escalationPatch.escalationProvider = savedSettings['escalation_provider'] as ProviderId;
+      }
+      if (savedSettings['escalation_model']) {
+        escalationPatch.escalationModel = savedSettings['escalation_model'];
+      }
+      if (savedSettings['escalation_effort']) {
+        escalationPatch.escalationEffort = savedSettings['escalation_effort'] as typeof store.settings.escalationEffort;
+      }
+      if (Object.keys(escalationPatch).length > 0) {
+        store.setSettings(escalationPatch);
+      }
 
-      // Load history
-      const summaries = await bridge.listRuns();
-      store.setHistorySummaries(summaries);
+      // Restore per-stage providers if persisted
+      const stageKeys = ['intake', 'plan', 'critic_a', 'critic_b', 'merge', 'implement', 'refine'] as const;
+      const restoredProviders: Record<string, ProviderId> = { ...store.settings.stageProviders };
+      let providerPatched = false;
+      for (const key of stageKeys) {
+        const v = savedSettings[`stage_provider_${key}`];
+        if (v) {
+          restoredProviders[key] = v as ProviderId;
+          providerPatched = true;
+        }
+      }
+      if (providerPatched) {
+        store.setSettings({ stageProviders: restoredProviders });
+      }
+
+      // Probe installed provider CLIs FIRST — fast filesystem lookups that
+      // populate the provider dropdowns. Must not be blocked by the slow
+      // live claude-model probe below.
+      try {
+        const providerInfos = await bridge.probeProviders();
+        store.setProviders(providerInfos);
+      } catch (e) {
+        console.error('probeProviders failed', e);
+      }
+
+      // Load history (fast, independent of model probing)
+      try {
+        const summaries = await bridge.listRuns();
+        store.setHistorySummaries(summaries);
+      } catch (e) {
+        console.error('listRuns failed', e);
+      }
+
+      // Probe claude model availability LAST and in the background — it
+      // makes live `claude` calls and can take 10–20s on a cold cache.
+      // The dropdowns already work without it via provider suggestions.
+      void bridge
+        .probeModels()
+        .then((models) => {
+          if (models.length > 0) store.setAvailableModels(models);
+        })
+        .catch((e) => console.error('probeModels failed', e));
 
       // Subscribe to events
       const unsubEngine = bridge.onEngineEvent((envelope) => {
@@ -84,16 +135,20 @@ export default function App() {
           goal: summary.goal,
           workdir: summary.workdir,
           preset: summary.preset as 'standard' | 'classic_linear' | 'fast',
-          intake:   { model: settings.stageModels['intake']   ?? 'sonnet', effort: settings.stageEfforts['intake']   ?? 'low' },
-          plan:     { model: settings.stageModels['plan']      ?? 'fable',  effort: settings.stageEfforts['plan']      ?? 'max' },
-          critic_a: { model: settings.stageModels['critic_a']  ?? 'opus',   effort: settings.stageEfforts['critic_a']  ?? 'high' },
+          intake:    { provider: (settings.stageProviders['intake']   ?? 'claude') as ProviderId, model: settings.stageModels['intake']   ?? 'sonnet', effort: settings.stageEfforts['intake']   ?? 'low' },
+          plan:      { provider: (settings.stageProviders['plan']      ?? 'claude') as ProviderId, model: settings.stageModels['plan']      ?? 'fable',  effort: settings.stageEfforts['plan']      ?? 'max' },
+          critic_a:  { provider: (settings.stageProviders['critic_a']  ?? 'claude') as ProviderId, model: settings.stageModels['critic_a']  ?? 'opus',   effort: settings.stageEfforts['critic_a']  ?? 'high' },
           critic_b: settings.ensembleCritic
-            ? { model: settings.stageModels['critic_b'] ?? 'fable', effort: settings.stageEfforts['critic_b'] ?? 'high' }
+            ? { provider: (settings.stageProviders['critic_b'] ?? 'claude') as ProviderId, model: settings.stageModels['critic_b'] ?? 'fable', effort: settings.stageEfforts['critic_b'] ?? 'high' }
             : null,
-          merge:    { model: settings.stageModels['merge']     ?? 'sonnet', effort: settings.stageEfforts['merge']     ?? 'medium' },
-          implement:{ model: settings.stageModels['implement'] ?? 'sonnet', effort: settings.stageEfforts['implement'] ?? 'medium' },
-          refine:   { model: settings.stageModels['refine']    ?? 'sonnet', effort: settings.stageEfforts['refine']    ?? 'medium' },
-          escalation_model: 'fable',
+          merge:     { provider: (settings.stageProviders['merge']     ?? 'claude') as ProviderId, model: settings.stageModels['merge']     ?? 'sonnet', effort: settings.stageEfforts['merge']     ?? 'medium' },
+          implement: { provider: (settings.stageProviders['implement'] ?? 'claude') as ProviderId, model: settings.stageModels['implement'] ?? 'sonnet', effort: settings.stageEfforts['implement'] ?? 'medium' },
+          refine:    { provider: (settings.stageProviders['refine']    ?? 'claude') as ProviderId, model: settings.stageModels['refine']    ?? 'sonnet', effort: settings.stageEfforts['refine']    ?? 'medium' },
+          escalation: {
+            provider: settings.escalationProvider,
+            model: settings.escalationModel,
+            effort: settings.escalationEffort,
+          },
           max_refine_iterations: settings.maxRefineIterations,
           escalate_after: settings.escalateAfter,
           checkpoint_before_implement: true,
