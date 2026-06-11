@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="192" viewBox="0 0 64 96" role="img" aria-label="Torch logo — a lit torch">
+  <defs>
+    <radialGradient id="torch-glow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#E8A33D" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#E8A33D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="26" r="22" fill="url(#torch-glow)"/>
+  <path fill="#E8A33D" d="M32 5 C40 13 45.5 21 44 29.5 C42.5 37.5 37 41 32 41 C27 41 21.5 37.5 20 29.5 C18.5 21 24 13 32 5 Z"/>
+  <path fill="#F2C063" d="M32 14 C37 19.5 40 24.5 39 29.8 C38 34.8 35 37.5 32 37.5 C29 37.5 26 34.8 25 29.8 C24 24.5 27 19.5 32 14 Z"/>
+  <path fill="#FBE9C0" d="M32 22 C34.8 25.2 36.3 28 35.6 31 C35 33.8 33.6 35.2 32 35.2 C30.4 35.2 29 33.8 28.4 31 C27.7 28 29.2 25.2 32 22 Z"/>
+  <rect x="26.6" y="39" width="10.8" height="9.5" rx="2" fill="#3A3128"/>
+  <rect x="26.6" y="42.6" width="10.8" height="1.4" fill="#2A231C"/>
+  <path d="M29.4 48.5 L34.6 48.5 L33.2 88 C33.2 89.3 30.8 89.3 30.8 88 Z" fill="#4A3A28"/>
+</svg>

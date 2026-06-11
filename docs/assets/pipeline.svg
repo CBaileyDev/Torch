@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="290" viewBox="0 0 1280 290" role="img" aria-label="The Torch pipeline: Intake, Plan, Critics, Implement, then a Verify and Refine loop" font-family="ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace">
+  <rect x="1" y="1" width="1278" height="288" rx="12" fill="#121315" stroke="#202327" stroke-width="2"/>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#70767D"/>
+    </marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#E8A33D"/>
+    </marker>
+  </defs>
+
+  <!-- connectors -->
+  <line x1="250" y1="112" x2="293" y2="112" stroke="#70767D" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="495" y1="112" x2="538" y2="112" stroke="#70767D" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="740" y1="112" x2="783" y2="112" stroke="#70767D" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="985" y1="112" x2="1028" y2="112" stroke="#70767D" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 1 INTAKE -->
+  <rect x="50" y="64" width="200" height="96" rx="9" fill="#191B1E" stroke="#25282C"/>
+  <circle cx="76" cy="90" r="11" fill="none" stroke="#E8A33D"/>
+  <text x="76" y="94" text-anchor="middle" font-size="11" fill="#E8A33D">1</text>
+  <text x="96" y="94" font-size="12" letter-spacing="1.5" fill="#F0F2F4">INTAKE</text>
+  <rect x="65" y="112" width="118" height="20" rx="4" fill="#1F2226" stroke="#2D3136"/>
+  <text x="124" y="126" text-anchor="middle" font-size="10" fill="#C2C7CD">sonnet &#183; low</text>
+  <text x="65" y="150" font-size="9.5" fill="#70767D">3&#8211;5 sharp questions</text>
+  <text x="150" y="184" text-anchor="middle" font-size="9.5" fill="#70767D">new session &#8594; main</text>
+
+  <!-- 2 PLAN -->
+  <rect x="295" y="64" width="200" height="96" rx="9" fill="#191B1E" stroke="#25282C"/>
+  <circle cx="321" cy="90" r="11" fill="none" stroke="#E8A33D"/>
+  <text x="321" y="94" text-anchor="middle" font-size="11" fill="#E8A33D">2</text>
+  <text x="341" y="94" font-size="12" letter-spacing="1.5" fill="#F0F2F4">PLAN</text>
+  <rect x="310" y="112" width="110" height="20" rx="4" fill="#1F2226" stroke="#2D3136"/>
+  <text x="365" y="126" text-anchor="middle" font-size="10" fill="#C2C7CD">fable &#183; max</text>
+  <text x="310" y="150" font-size="9.5" fill="#70767D">full spec + milestones</text>
+  <text x="395" y="184" text-anchor="middle" font-size="9.5" fill="#70767D">resumes main</text>
+
+  <!-- 3 CRITICS -->
+  <rect x="540" y="64" width="200" height="96" rx="9" fill="#191B1E" stroke="#25282C"/>
+  <circle cx="566" cy="90" r="11" fill="none" stroke="#E8A33D"/>
+  <text x="566" y="94" text-anchor="middle" font-size="11" fill="#E8A33D">3</text>
+  <text x="586" y="94" font-size="12" letter-spacing="1.5" fill="#F0F2F4">CRITICS</text>
+  <rect x="555" y="112" width="160" height="20" rx="4" fill="#1F2226" stroke="#2D3136"/>
+  <text x="635" y="126" text-anchor="middle" font-size="10" fill="#C2C7CD">opus + fable &#183; high</text>
+  <text x="555" y="150" font-size="9.5" fill="#70767D">adversarial review &#215;2</text>
+  <text x="640" y="184" text-anchor="middle" font-size="9.5" fill="#70767D">fresh sessions, parallel</text>
+
+  <!-- 4 IMPLEMENT -->
+  <rect x="785" y="64" width="200" height="96" rx="9" fill="#191B1E" stroke="#25282C"/>
+  <circle cx="811" cy="90" r="11" fill="none" stroke="#E8A33D"/>
+  <text x="811" y="94" text-anchor="middle" font-size="11" fill="#E8A33D">4</text>
+  <text x="831" y="94" font-size="12" letter-spacing="1.5" fill="#F0F2F4">IMPLEMENT</text>
+  <rect x="800" y="112" width="140" height="20" rx="4" fill="#1F2226" stroke="#2D3136"/>
+  <text x="870" y="126" text-anchor="middle" font-size="10" fill="#C2C7CD">sonnet &#183; medium</text>
+  <text x="800" y="150" font-size="9.5" fill="#70767D">writes real files</text>
+  <text x="885" y="184" text-anchor="middle" font-size="9.5" fill="#70767D">fresh, in your workdir</text>
+
+  <!-- 5 VERIFY ⇄ REFINE -->
+  <rect x="1030" y="64" width="200" height="96" rx="9" fill="#1E1C16" stroke="#80581F"/>
+  <circle cx="1056" cy="90" r="11" fill="none" stroke="#E8A33D"/>
+  <text x="1056" y="94" text-anchor="middle" font-size="11" fill="#E8A33D">5</text>
+  <text x="1076" y="94" font-size="12" letter-spacing="1.5" fill="#F0F2F4">VERIFY &#8646; REFINE</text>
+  <rect x="1045" y="112" width="140" height="20" rx="4" fill="#1F2226" stroke="#2D3136"/>
+  <text x="1115" y="126" text-anchor="middle" font-size="10" fill="#C2C7CD">sonnet &#8594; fable</text>
+  <text x="1045" y="150" font-size="9.5" fill="#70767D">runs build + tests</text>
+  <text x="1130" y="184" text-anchor="middle" font-size="9.5" fill="#70767D">resumes implementer</text>
+
+  <!-- verify/refine loop -->
+  <path d="M1210 64 C1210 36 1050 36 1050 64" fill="none" stroke="#E8A33D" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrAmber)"/>
+  <text x="1130" y="34" text-anchor="middle" font-size="9.5" fill="#E8A33D">loop until green &#183; verify costs zero tokens</text>
+
+  <!-- goal rail -->
+  <line x1="50" y1="226" x2="1230" y2="226" stroke="#E8A33D" stroke-width="1" stroke-dasharray="2 5" opacity="0.7"/>
+  <text x="640" y="254" text-anchor="middle" font-size="10.5" fill="#9BA1A8">every stage receives the original goal verbatim + the accumulated artifact &#8212; no telephone game</text>
+</svg>
