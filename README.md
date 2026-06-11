@@ -81,6 +81,7 @@ matched to that stage's cognitive demands — and never claims success it didn't
 
 ## 🕯️ The torch is the status system
 
+
 No spinners, no progress bars: each stage card carries a torch.
 
 <div align="center">
