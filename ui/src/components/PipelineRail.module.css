@@ -1,0 +1,21 @@
+/* 5-column grid per mockup: 1fr 1fr 1.3fr 1fr 1.2fr */
+.rail {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr 1fr 1.2fr;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.toolUseCount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-faint);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 900px) {
+  .rail {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -1,0 +1,37 @@
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: var(--side);
+  border-bottom: 1px solid var(--border);
+  flex: none;
+  /* Allow drag in Tauri */
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+/* room for the native macOS traffic lights overlaying this bar */
+.trafficLightInset {
+  padding-left: 84px;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.torchGlyph {
+  display: flex;
+  align-items: center;
+}
+
+.wordmarkText {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.32em;
+  color: var(--ink-bright);
+  font-stretch: 110%;
+}

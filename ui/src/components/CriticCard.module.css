@@ -1,0 +1,147 @@
+.module {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 13px 13px 11px;
+  position: relative;
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+}
+
+.module.live {
+  border-color: var(--border-live);
+  background: var(--panel-live);
+  box-shadow: 0 0 0 1px var(--border-live), 0 6px 22px -8px var(--accent-soft);
+}
+
+.modTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.modName {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding-top: 4px;
+  flex: 1;
+}
+
+.module.live .modName {
+  color: var(--ink-bright);
+}
+
+.modTorch {
+  width: 22px;
+  flex: none;
+  margin: -4px -2px 0 0;
+  display: flex;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 9px;
+  flex: 1;
+}
+
+.single {
+  margin-top: 9px;
+  flex: 1;
+}
+
+.substrip {
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-bd);
+  border-radius: 5px;
+  padding: 6px 8px;
+}
+
+.substripTop {
+  margin-bottom: 4px;
+}
+
+.chipRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.modModel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--chip-ink);
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  padding: 2px 4px;
+  cursor: pointer;
+  margin: 0 -4px;
+}
+
+.modModel:hover,
+.modModel:focus-visible {
+  background: var(--chip-bd);
+  outline: none;
+}
+
+.modEffort {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+}
+
+.popoverAnchor {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 200;
+}
+
+.vu {
+  height: 3px;
+  background: var(--side);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.vuBar {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+}
+
+@keyframes meter {
+  0%   { width: 18%; }
+  45%  { width: 71%; }
+  100% { width: 52%; }
+}
+
+.vuBarLive {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  animation: meter 2.8s ease-in-out infinite alternate;
+}
+
+.modStat {
+  margin-top: auto;
+  padding-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  display: flex;
+  justify-content: space-between;
+}
+
+.statLabel { color: var(--ink-faint); }
+.statLabelLive { color: var(--accent); }
+.statTime { color: var(--ink-faint); }

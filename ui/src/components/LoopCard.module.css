@@ -1,0 +1,125 @@
+.module {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 13px 13px 11px;
+  position: relative;
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+}
+
+.module.live {
+  border-color: var(--border-live);
+  background: var(--panel-live);
+  box-shadow: 0 0 0 1px var(--border-live), 0 6px 22px -8px var(--accent-soft);
+}
+
+.loopbadge {
+  position: absolute;
+  top: -9px;
+  right: 42px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--ink-faint);
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.modTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.modName {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding-top: 4px;
+  flex: 1;
+}
+
+.module.live .modName {
+  color: var(--ink-bright);
+}
+
+.modTorch {
+  width: 22px;
+  flex: none;
+  margin: -4px -2px 0 0;
+  display: flex;
+}
+
+.chipRow {
+  margin-top: 9px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+}
+
+.modModel {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--chip-ink);
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-bd);
+  border-radius: 4px;
+  padding: 3px 7px;
+  cursor: pointer;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.15s;
+}
+
+.modModel:hover,
+.modModel:focus-visible {
+  border-color: var(--ink-faint);
+  outline: none;
+}
+
+.modEffort {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-faint);
+}
+
+.popoverAnchor {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 200;
+}
+
+.escalateNote {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+
+.modStat {
+  margin-top: auto;
+  padding-top: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  display: flex;
+  justify-content: space-between;
+}
+
+.statLabel { color: var(--ink-faint); }
+.statLabelLive { color: var(--accent); }
+.statTime { color: var(--ink-faint); }

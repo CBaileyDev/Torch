@@ -1,0 +1,114 @@
+/* ============================================================
+   TORCH — Design token layer
+   Lifted verbatim from torch-identity.html
+   ============================================================ */
+
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 300 800;
+  font-stretch: 75% 125%;
+  font-display: swap;
+  src: url('/fonts/Archivo-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-italic.woff2') format('woff2');
+}
+
+/* ---------- THEMES ---------- */
+
+/* Coal — default. Neutral grey-black room; the flame is the only warmth.
+   Inks sit higher-contrast than the original rooms for long reading. */
+.theme-coal {
+  --bg: #121315;
+  --side: #0C0D0E;
+  --panel: #191B1E;
+  --panel-live: #1E1C16;
+  --border: #25282C;
+  --border-live: #80581F;
+  --win-bd: #202327;
+  --ink: #D6D9DD;
+  --ink-bright: #F0F2F4;
+  --ink-dim: #9BA1A8;
+  --ink-faint: #70767D;
+  --chip-bg: #1F2226;
+  --chip-bd: #2D3136;
+  --chip-ink: #C2C7CD;
+  --accent: #E8A33D;
+  --accent-soft: rgba(232, 163, 61, 0.16);
+  --red: #C25E5E;
+}
+
+/* Pitch — warm near-black (inks lifted for readability). */
+.theme-pitch {
+  --bg: #141210;
+  --side: #0F0E0C;
+  --panel: #1A1714;
+  --panel-live: #1E1812;
+  --border: #2A251D;
+  --border-live: #7A5A22;
+  --win-bd: #26231F;
+  --ink: #D8D2C6;
+  --ink-bright: #EFE9DC;
+  --ink-dim: #9C9485;
+  --ink-faint: #6E6759;
+  --chip-bg: #231E16;
+  --chip-bd: #322B1F;
+  --chip-ink: #C2B9A6;
+  --accent: #E8A33D;
+  --accent-soft: rgba(232, 163, 61, 0.18);
+  --red: #C25E5E;
+}
+
+.theme-iron {
+  --bg: #15171A;
+  --side: #101215;
+  --panel: #1A1D21;
+  --panel-live: #1F1F1B;
+  --border: #272B30;
+  --border-live: #6E5526;
+  --win-bd: #23272B;
+  --ink: #CFD4DA;
+  --ink-bright: #EBEFF3;
+  --ink-dim: #99A1AA;
+  --ink-faint: #6B737C;
+  --chip-bg: #1F2429;
+  --chip-bd: #2C3239;
+  --chip-ink: #ABB4BD;
+  --accent: #E8A33D;
+  --accent-soft: rgba(232, 163, 61, 0.14);
+  --red: #C25E5E;
+}
+
+.theme-ember {
+  --bg: #171110;
+  --side: #120D0C;
+  --panel: #1E1513;
+  --panel-live: #241712;
+  --border: #33241F;
+  --border-live: #7A4524;
+  --win-bd: #2B201B;
+  --ink: #DACFC4;
+  --ink-bright: #F1E7DA;
+  --ink-dim: #A4968A;
+  --ink-faint: #71645A;
+  --chip-bg: #261A15;
+  --chip-bd: #372620;
+  --chip-ink: #C0AE9D;
+  --accent: #E8A33D;
+  --accent-soft: rgba(232, 163, 61, 0.16);
+  --red: #C25E5E;
+}
