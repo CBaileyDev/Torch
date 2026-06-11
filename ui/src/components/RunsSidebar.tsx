@@ -54,7 +54,7 @@ export function RunsSidebar({ onSelectRun }: Props) {
             >
               <span className={styles.goal}>{summary.goal}</span>
               <span className={styles.meta}>
-                <i className={`${styles.dot} ${styles[STATUS_DOT[summary.status]]}`} />
+                <i aria-hidden="true" className={`${styles.dot} ${styles[STATUS_DOT[summary.status]]}`} />
                 {statusLine(summary)}
               </span>
             </button>

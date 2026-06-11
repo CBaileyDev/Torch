@@ -188,7 +188,10 @@ export function SettingsPanel({ onClose }: Props) {
             rows={3}
             placeholder={'one command per line, e.g.\ncargo test\nnpm test'}
             value={settings.verifyCommands}
-            onChange={(e) => store.setSettings({ verifyCommands: e.target.value })}
+            onChange={(e) => {
+              store.setSettings({ verifyCommands: e.target.value });
+              save('verify_commands', e.target.value);
+            }}
             aria-label="Verify commands, one per line"
           />
           <span className={styles.hint}>

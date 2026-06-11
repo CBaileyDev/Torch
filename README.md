@@ -58,7 +58,7 @@ matched to that stage's cognitive demands — and never claims success it didn't
 |:-:|-------|------------------------|---------|
 | 1 | **Intake** — asks you 3–5 sharp clarifying questions, writes the brief and the verify commands | `sonnet` · low | new (becomes the main session) |
 | 2 | **Planner** — full spec: stack, modules, contracts, milestones; spawns research subagents when the goal touches fast-moving dependencies | `fable` · max | resumes main |
-| 3 | **Critics** — adversarial review in brand-new sessions (`opus` + `fable` in parallel on the 20x tier; single critic otherwise), then a merge pass | `opus`/`fable` · high | fresh ×2, merge resumes main |
+| 3 | **Critics** — adversarial review in brand-new sessions (`opus` + `fable` in parallel on the Claude Max 20x plan; a single critic on Pro/Max 5x), then a merge pass | `opus`/`fable` · high | fresh ×2, merge resumes main |
 | 4 | **Implementer** — writes real files into your working directory; Heavy Mode swaps in `opus` | `sonnet` · medium | fresh, in the workdir |
 | 5 | **Verify ⇄ Refine** — the orchestrator runs your build/tests (zero tokens), feeds structured failures back into the implementer's resumed session; the same failure surviving consecutive iterations escalates the refiner to `fable` | `sonnet` → `fable` | resumes implementer |
 
@@ -147,7 +147,7 @@ your subscription rate limits — the usage footer keeps that visible at all tim
 Each run writes everything to plain files in your working directory, so the output
 survives independent of the app:
 
-```
+```text
 your-workdir/
 └── torch/run-<timestamp>/
     ├── artifact.md      # brief, plan, critiques, final spec

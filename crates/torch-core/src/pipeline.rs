@@ -191,8 +191,12 @@ pub fn run_verify(commands: &[String], workdir: &Path, iteration: u32) -> Verify
                     let mut combined = String::from_utf8_lossy(&output.stdout).into_owned();
                     combined.push_str(&String::from_utf8_lossy(&output.stderr));
                     if combined.len() > VERIFY_OUTPUT_TAIL_BYTES {
-                        let cut = combined.len() - VERIFY_OUTPUT_TAIL_BYTES;
-                        // keep the tail — failures print last
+                        // keep the tail — failures print last; advance to a
+                        // char boundary so multi-byte output can't panic
+                        let mut cut = combined.len() - VERIFY_OUTPUT_TAIL_BYTES;
+                        while !combined.is_char_boundary(cut) {
+                            cut += 1;
+                        }
                         combined = combined[cut..].to_string();
                     }
                     VerifyResult {

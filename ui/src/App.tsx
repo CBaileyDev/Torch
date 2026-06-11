@@ -37,6 +37,9 @@ export default function App() {
         void planTier;
         store.setSettings({ ...rest, planTier: savedSettings['plan_tier'] as 'pro' | 'max5x' | 'max20x' });
       }
+      if (savedSettings['verify_commands'] !== undefined) {
+        store.setSettings({ verifyCommands: savedSettings['verify_commands'] });
+      }
 
       // Load history (fast, independent of model probing)
       try {

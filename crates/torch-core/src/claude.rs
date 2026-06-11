@@ -4,7 +4,7 @@
 //! Torch authenticates through the user's existing `claude` login — the
 //! engine never handles an API key.
 
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead, BufReader, Read};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -106,8 +106,8 @@ pub enum ClaudeError {
     },
     #[error("failed reading claude output: {0}")]
     Read(#[from] std::io::Error),
-    #[error("claude exited ({status}) without a result event")]
-    NoResult { status: String },
+    #[error("claude exited ({status}) without a result event{detail}")]
+    NoResult { status: String, detail: String },
     #[error("run cancelled")]
     Cancelled,
 }
@@ -149,12 +149,22 @@ pub fn run_invocation(
         .current_dir(invocation.workdir)
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
-        .stderr(Stdio::null());
+        .stderr(Stdio::piped());
 
     let mut child = command.spawn().map_err(|source| ClaudeError::Spawn {
         binary: invocation.binary.display().to_string(),
         source,
     })?;
+
+    // Drain stderr on its own thread so neither pipe can fill and deadlock;
+    // its tail is surfaced when the CLI dies without a result (auth errors,
+    // bad flags) instead of being thrown away.
+    let stderr = child.stderr.take().expect("stderr was piped");
+    let stderr_thread = std::thread::spawn(move || {
+        let mut buf = String::new();
+        let _ = BufReader::new(stderr).read_to_string(&mut buf);
+        buf
+    });
 
     let stdout = child.stdout.take().expect("stdout was piped");
     let reader = BufReader::new(stdout);
@@ -164,6 +174,7 @@ pub fn run_invocation(
         if invocation.cancel.is_cancelled() {
             let _ = child.kill();
             let _ = child.wait();
+            let _ = stderr_thread.join();
             return Err(ClaudeError::Cancelled);
         }
         let line = line?;
@@ -176,12 +187,34 @@ pub fn run_invocation(
     }
 
     let status = child.wait()?;
+    let stderr_output = stderr_thread.join().unwrap_or_default();
     if invocation.cancel.is_cancelled() {
         return Err(ClaudeError::Cancelled);
     }
-    final_result.ok_or(ClaudeError::NoResult {
-        status: status.to_string(),
+    final_result.ok_or_else(|| {
+        let tail = stderr_tail(&stderr_output, 2000);
+        ClaudeError::NoResult {
+            status: status.to_string(),
+            detail: if tail.is_empty() {
+                String::new()
+            } else {
+                format!(" — stderr: {tail}")
+            },
+        }
     })
+}
+
+/// Last `max` bytes of trimmed stderr, advanced to a char boundary.
+fn stderr_tail(output: &str, max: usize) -> String {
+    let trimmed = output.trim();
+    if trimmed.len() <= max {
+        return trimmed.to_string();
+    }
+    let mut cut = trimmed.len() - max;
+    while !trimmed.is_char_boundary(cut) {
+        cut += 1;
+    }
+    trimmed[cut..].to_string()
 }
 
 #[cfg(test)]

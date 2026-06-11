@@ -4,7 +4,8 @@
 //! Reply source, first match wins:
 //! - `TORCH_STUB_REPLAY` env — path of one stream-json file to print.
 //! - `TORCH_STUB_DIR` env — directory of `reply-<n>.jsonl` files replayed in
-//!   invocation order (a `counter` file in the directory tracks `n`).
+//!   invocation order (atomic `claim-<n>` files in the directory track `n`,
+//!   so parallel invocations stay race-free).
 //! - a `torch-stub.config` file beside the executable whose contents are the
 //!   reply directory path — this is how tests run isolated stubs in parallel
 //!   without touching the process environment.
@@ -24,13 +25,20 @@ fn reply_dir_from_sidecar() -> Option<PathBuf> {
 }
 
 fn next_reply_in(dir: PathBuf) -> PathBuf {
-    let counter_path = dir.join("counter");
-    let n: u32 = fs::read_to_string(&counter_path)
-        .ok()
-        .and_then(|s| s.trim().parse().ok())
-        .unwrap_or(0)
-        + 1;
-    let _ = fs::write(&counter_path, n.to_string());
+    // Claim the next sequence number atomically: `create_new` can only
+    // succeed for one process per claim file, so parallel invocations
+    // (e.g. ensemble critics) each replay a distinct reply.
+    let mut n: u32 = 1;
+    while n < 10_000 {
+        let claim = fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(dir.join(format!("claim-{n}")));
+        if claim.is_ok() {
+            break;
+        }
+        n += 1;
+    }
     let numbered = dir.join(format!("reply-{n}.jsonl"));
     if numbered.is_file() {
         numbered

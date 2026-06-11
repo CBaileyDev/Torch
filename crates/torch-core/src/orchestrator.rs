@@ -366,22 +366,31 @@ fn run_standard(
         })
     });
 
-    let (critic_a_result, critique_a) = run_stage(
+    let critic_a_outcome = run_stage(
         ctx,
         "critic-a",
         &config.critic_a.model,
         &critic_prompt_a,
         None,
-    )?;
+    );
+    // Join critic-b before any early return: a failed critic-a must not
+    // leave a detached critic thread streaming events into a dead run.
+    let critic_b_outcome = critique_b_handle.map(|handle| {
+        handle
+            .join()
+            .map_err(|_| PipelineError::StageFailed {
+                stage: "critic-b".to_string(),
+                message: "critic thread panicked".to_string(),
+            })
+            .and_then(|result| result)
+    });
+
+    let (critic_a_result, critique_a) = critic_a_outcome?;
     stage_results.push(("critic-a".to_string(), critic_a_result));
     let mut critiques = format!("### critic-a\n{critique_a}");
 
-    if let Some(handle) = critique_b_handle {
-        let (critic_b_result, critique_b) =
-            handle.join().map_err(|_| PipelineError::StageFailed {
-                stage: "critic-b".to_string(),
-                message: "critic thread panicked".to_string(),
-            })??;
+    if let Some(outcome) = critic_b_outcome {
+        let (critic_b_result, critique_b) = outcome?;
         stage_results.push(("critic-b".to_string(), critic_b_result));
         critiques.push_str(&format!("\n\n### critic-b\n{critique_b}"));
     }
