@@ -77,6 +77,7 @@ export function CriticCard({ critic, onModelChangeA, onModelChangeB }: Props) {
                     onClose={() => setPopoverOpenA(false)}
                     onChange={(m, e) => { onModelChangeA(m, e); setPopoverOpenA(false); }}
                     anchorRef={chipRefA as React.RefObject<HTMLElement | null>}
+                  />
                 </div>
               )}
             </div>
@@ -110,6 +111,7 @@ export function CriticCard({ critic, onModelChangeA, onModelChangeB }: Props) {
                       onClose={() => setPopoverOpenB(false)}
                       onChange={(m, e) => { onModelChangeB(m, e); setPopoverOpenB(false); }}
                       anchorRef={chipRefB as React.RefObject<HTMLElement | null>}
+                    />
                   </div>
                 )}
               </div>

@@ -180,6 +180,7 @@ fn start_run(
                     PipelineError::Cancelled | PipelineError::CheckpointRejected => "cancelled",
                     _ => "failed",
                 };
+                let _ = db::set_run_status(&conn, &orch_run_id, status);
                 let _ = orch_app.emit(
                     "run-failed",
                     json!({ "runId": orch_run_id, "error": error.to_string() }),
@@ -421,15 +422,12 @@ pub fn run() {
             eprintln!("[setup] torch-app starting");
             // Standard asset-protocol window (IPC intact). Built in code —
             // not tauri.conf.json — so we can set the macOS overlay titlebar.
-            let window = tauri::WebviewWindowBuilder::new(
-                app,
-                "main",
-                tauri::WebviewUrl::default(),
-            )
-            .title("TORCH")
-            .inner_size(1280.0, 840.0)
-            .min_inner_size(980.0, 640.0)
-            .background_color(tauri::webview::Color(18, 19, 21, 255));
+            let window =
+                tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::default())
+                    .title("TORCH")
+                    .inner_size(1280.0, 840.0)
+                    .min_inner_size(980.0, 640.0)
+                    .background_color(tauri::webview::Color(18, 19, 21, 255));
             #[cfg(target_os = "macos")]
             let window = window
                 .title_bar_style(tauri::TitleBarStyle::Overlay)

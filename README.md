@@ -21,9 +21,9 @@ driven entirely by your existing [Claude Code](https://claude.com/claude-code) s
 
 <br>
 
-<img src="docs/assets/control-room.svg" width="100%" alt="The Torch Control Room mid-run: a five-card pipeline rail with two critics streaming in parallel, an output pane, and a usage footer">
+<img src="docs/assets/screenshot-control-room.png" width="100%" alt="The Torch Control Room mid-run: a five-card pipeline rail with the critic torch lit, and two critics streaming adversarial findings in parallel panes">
 
-*The Control Room — two critics tearing into the plan in parallel while the rest of the pipeline waits its turn.*
+*The Control Room (demo mode) — two critics tearing into the plan in parallel while the rest of the pipeline waits its turn.*
 
 </div>
 
@@ -64,6 +64,10 @@ matched to that stage's cognitive demands — and never claims success it didn't
 
 > **No telephone game.** No stage ever sees only the previous stage's output: every prompt
 > carries the original goal verbatim plus the accumulated artifact.
+
+| Intake asks before anyone codes | The loop verifies before anyone celebrates |
+|:---:|:---:|
+| ![Intake stage asking 3–5 sharp clarifying questions](docs/assets/screenshot-intake.png) | ![Verify ⇄ Refine loop going green after an escalated fix](docs/assets/screenshot-loop.png) |
 
 ### Presets
 

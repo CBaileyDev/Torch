@@ -7,7 +7,7 @@
     "devUrl": "http://localhost:5173",
     "frontendDist": "../../ui/dist",
     "beforeDevCommand": "echo 'Vite dev server can be started separately with: cd ui && npm run dev (for browser demo mode)'",
-    "beforeBuildCommand": "npm run build --prefix /Users/carterbarker/Downloads/Torch/torch-app/ui"
+    "beforeBuildCommand": "npm run build --prefix ../../ui"
   },
   "app": {
     "windows": [],
@@ -21,6 +21,7 @@
     "targets": "all",
     "icon": [
       "icons/icon.png",
+      "icons/icon.ico",
       "icons/icon.icns"
     ]
   }
