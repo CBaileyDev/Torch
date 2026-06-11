@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Torch",
+  "version": "0.1.0",
+  "identifier": "app.torch.desktop",
+  "build": {
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../../ui/dist",
+    "beforeDevCommand": "cd ../../ui && npm run dev",
+    "beforeBuildCommand": "cd ../../ui && npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "TORCH",
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "width": 1280,
+        "height": 840,
+        "minWidth": 980,
+        "minHeight": 640
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": ["icons/icon.png", "icons/icon.icns"]
+  }
+}

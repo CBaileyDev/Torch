@@ -1,0 +1,16 @@
+[package]
+name = "torch-core"
+description = "Torch orchestrator engine: claude process/session management, stream parsing, pipeline runner, deterministic verifier"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile = "3"
